@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Helper",
+    "\\Models",
+    "\\Views",
+    "\\Views\\Mail",
+    "\\wwwroot",
+    "\\wwwroot\\js",
+    "\\wwwroot\\lib",
+    "\\wwwroot\\lib\\jquery-validation",
+    "\\wwwroot\\lib\\jquery-validation\\dist"
+  ],
+  "SelectedNode": "\\Helper\\SessionExtensions.cs",
+  "PreviewInSolutionExplorer": false
+}
