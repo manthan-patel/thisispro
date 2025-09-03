@@ -1,0 +1,130 @@
+@model thisispro.Models.MailSettings
+
+@{
+    ViewData["Title"] = "Mail Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .settings-wrapper { max-width: 720px; margin: 40px auto; padding: 0 16px; }
+    .settings-card {
+        background: rgba(12, 14, 24, 0.85);
+        border: 1px solid rgba(0, 255, 255, 0.15);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 30px rgba(0, 255, 255, 0.08) inset;
+        backdrop-filter: blur(6px);
+        padding: 24px;
+        margin: 0px 55px 0px 55px;
+    }
+    .settings-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .settings-title { font-size: 24px; margin: 0; color: #e9f3ff; letter-spacing: .5px; }
+    .settings-title i { color: #00e5ff; text-shadow: 0 0 8px rgba(0, 229, 255, .6); }
+    .settings-label { color: #cfe8ff; font-weight: 600; letter-spacing: .3px; }
+    .hint { color: #8fb7d6; font-size: 12px; margin-bottom: 10px; }
+    .actions { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+    .alert { border-radius: 10px; }
+    .mb-3 .quantum-input { padding: 12px 14px;margin-bottom: 10px; }
+    
+    /* Remove number input spinners */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<div class="settings-wrapper">
+    <div class="settings-card">
+        <div class="settings-header">
+            <i class="fas fa-cog fa-lg"></i>
+            <h2 class="settings-title">Mail Settings</h2>
+        </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+
+    <form asp-action="Index" asp-controller="Settings" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label asp-for="MailId" class="form-label settings-label">Mail ID</label>
+            <input asp-for="MailId" class="form-control quantum-input" placeholder="e.g., yourname@example.com" />
+            <span asp-validation-for="MailId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label settings-label">User Name</label>
+            <input asp-for="UserName" class="form-control quantum-input" placeholder="e.g., John Doe or account username" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="AppPassword" class="form-label settings-label">App Password</label>
+            <input asp-for="AppPassword" type="text" class="form-control quantum-input" placeholder="Enter app password(Write without spaces)" />
+            <span asp-validation-for="AppPassword" class="text-danger"></span>
+            <div class="hint">Enable 2-step verification, then search for and create an app password in your Google settings.<div class="hint">Set your App name : "Mail" then click create.</div></div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Port" class="form-label settings-label">Port</label>
+            <input asp-for="Port" type="number" class="form-control quantum-input" placeholder="e.g., 587, 465" />
+            <span asp-validation-for="Port" class="text-danger"></span>
+            <!-- <div class="hint">Common ports: 587 (TLS), 465 (SSL), 25 (Standard)</div> -->
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SmtpHost" class="form-label settings-label">SMTP Host</label>
+            <input asp-for="SmtpHost" class="form-control quantum-input" placeholder="e.g., smtp.gmail.com" />
+            <span asp-validation-for="SmtpHost" class="text-danger"></span>
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn primary-btn">
+                <i class="fas fa-save"></i>
+                <span class="ms-1">Save</span>
+                <div class="btn-glow"></div>
+            </button>
+            <!-- <a asp-controller="Mail" asp-action="Dashboard" class="btn btn-secondary ms-2">Back to Dashboard</a> -->
+        </div>
+    </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Custom validation for port field
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const portInput = document.getElementById('Port');
+            
+            form.addEventListener('submit', function(e) {
+                const portValue = portInput.value.trim();
+                
+                if (!portValue) {
+                    e.preventDefault();
+                    alert('Port number is required. Please enter a valid port number.');
+                    portInput.focus();
+                    return false;
+                }
+                
+                const portNum = parseInt(portValue);
+                if (isNaN(portNum) || portNum < 1 || portNum > 65535) {
+                    e.preventDefault();
+                    alert('Port number must be between 1 and 65535.');
+                    portInput.focus();
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+
+
